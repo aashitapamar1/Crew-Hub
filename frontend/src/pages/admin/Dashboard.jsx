@@ -11,6 +11,12 @@ const ACTIVITY_LABELS = {
   FREELANCER_CREATED: 'New freelancer added',
   FREELANCER_UPDATED: 'Freelancer updated',
   FREELANCER_ARCHIVED: 'Freelancer archived',
+  PROJECT_CREATED: 'Project created',
+  PROJECT_UPDATED: 'Project updated',
+  PROJECT_STATUS_CHANGED: 'Project status updated',
+  PROJECT_MEMBER_ADDED: 'Freelancer assigned to project',
+  PROJECT_MEMBER_REMOVED: 'Freelancer removed from project',
+  MILESTONE_CREATED: 'Milestone created',
 }
 
 function Dashboard() {

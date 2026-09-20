@@ -5,6 +5,7 @@ const authRoutes = require('./routes/authRoutes')
 const dashboardRoutes = require('./routes/dashboardRoutes')
 const clientRoutes = require('./routes/clientRoutes')
 const freelancerRoutes = require('./routes/freelancerRoutes')
+const projectRoutes = require('./routes/projectRoutes')
 
 const app = express()
 
@@ -19,6 +20,7 @@ app.use('/api/auth', authRoutes)
 app.use('/api/dashboard', dashboardRoutes)
 app.use('/api/clients', clientRoutes)
 app.use('/api/freelancers', freelancerRoutes)
+app.use('/api/projects', projectRoutes)
 
 app.use(notFound)
 app.use(errorHandler)
