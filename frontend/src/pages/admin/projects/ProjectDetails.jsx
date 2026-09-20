@@ -201,6 +201,28 @@ function ProjectDetails() {
       </section>
 
       <section className="mt-6 rounded-lg border border-gray-200 bg-white p-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-medium text-gray-800">Tasks</h2>
+          <Link to={`/tasks/new?projectId=${id}`} className="text-sm text-blue-600 hover:underline">
+            Add Task
+          </Link>
+        </div>
+
+        {project.tasks.length === 0 ? (
+          <p className="mt-2 text-sm text-gray-500">No tasks yet.</p>
+        ) : (
+          <ul className="mt-3 space-y-2">
+            {project.tasks.map((t) => (
+              <li key={t.id} className="flex items-center justify-between rounded-md border border-gray-100 px-3 py-2 text-sm">
+                <Link to={`/tasks/${t.id}`} className="text-gray-800 hover:underline">{t.title}</Link>
+                <StatusBadge status={t.status} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <section className="mt-6 rounded-lg border border-gray-200 bg-white p-6">
         <h2 className="text-lg font-medium text-gray-800">Milestones</h2>
 
         {project.milestones.length === 0 ? (
