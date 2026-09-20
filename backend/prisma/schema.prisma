@@ -54,17 +54,20 @@ enum TaskStatus {
 // ---------- Models ----------
 
 model User {
-  id                 String              @id @default(uuid())
-  email              String              @unique
-  password           String
-  role               Role
-  isActive           Boolean             @default(true)
-  createdAt          DateTime            @default(now())
-  updatedAt          DateTime            @updatedAt
+  id                  String                @id @default(uuid())
+  email               String                @unique
+  password            String
+  role                Role
+  name                String
+  phone               String?
+  profilePicture      String?
+  isActive            Boolean               @default(true)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
 
-  client             Client?
-  freelancer         Freelancer?
-  notifications      Notification[]
+  client              Client?
+  freelancer          Freelancer?
+  notifications       Notification[]
   passwordResetTokens PasswordResetToken[]
 }
 
@@ -81,10 +84,6 @@ model Client {
   id                String       @id @default(uuid())
   userId            String       @unique
   user              User         @relation(fields: [userId], references: [id])
-
-  fullName          String
-  phone             String?
-  profilePicture    String?
 
   companyName       String?
   industry          String?
@@ -111,10 +110,6 @@ model Freelancer {
   id             String            @id @default(uuid())
   userId         String            @unique
   user           User              @relation(fields: [userId], references: [id])
-
-  fullName       String
-  phone          String?
-  profilePicture String?
 
   title          String?
   skills         String[]
