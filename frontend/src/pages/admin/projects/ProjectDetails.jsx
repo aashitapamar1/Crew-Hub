@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import * as projectService from '../../../services/projectService'
 import * as freelancerService from '../../../services/freelancerService'
+import * as fileService from '../../../services/fileService'
 import StatusBadge from '../../../components/StatusBadge'
 import PriorityBadge from '../../../components/PriorityBadge'
+import FileManager from '../../../components/FileManager'
 
 const STATUS_OPTIONS = ['PLANNED', 'IN_PROGRESS', 'ON_HOLD', 'COMPLETED', 'CANCELLED']
 
@@ -12,6 +14,7 @@ function ProjectDetails() {
   const navigate = useNavigate()
   const [project, setProject] = useState(null)
   const [freelancers, setFreelancers] = useState([])
+  const [files, setFiles] = useState([])
   const [error, setError] = useState('')
 
   const [newMemberId, setNewMemberId] = useState('')
@@ -28,8 +31,26 @@ function ProjectDetails() {
     Promise.all([loadProject(), freelancerService.listFreelancers({ limit: 100 })])
       .then(([, freelancerRes]) => setFreelancers(freelancerRes.freelancers))
       .catch(() => setError('Could not load project'))
+    loadFiles()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
+
+  function loadFiles() {
+    fileService.listFiles({ projectId: id }).then((res) => setFiles(res.files))
+  }
+
+  async function handleUploadFile(file) {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('projectId', id)
+    await fileService.uploadFile(formData)
+    loadFiles()
+  }
+
+  async function handleDeleteFile(fileId) {
+    await fileService.deleteFile(fileId)
+    loadFiles()
+  }
 
   async function handleStatusChange(e) {
     try {
@@ -221,6 +242,16 @@ function ProjectDetails() {
           </ul>
         )}
       </section>
+
+      <div className="mt-6">
+        <FileManager
+          title="Files"
+          files={files}
+          onUpload={handleUploadFile}
+          onDelete={handleDeleteFile}
+          emptyText="No files uploaded yet."
+        />
+      </div>
 
       <section className="mt-6 rounded-lg border border-gray-200 bg-white p-6">
         <h2 className="text-lg font-medium text-gray-800">Milestones</h2>

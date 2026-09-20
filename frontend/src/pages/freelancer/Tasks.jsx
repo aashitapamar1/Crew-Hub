@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import * as taskService from '../../services/taskService'
 import PriorityBadge from '../../components/PriorityBadge'
 
@@ -62,7 +63,11 @@ function Tasks() {
             ) : (
               tasks.map((task) => (
                 <tr key={task.id}>
-                  <td className="px-4 py-3 font-medium text-gray-800">{task.title}</td>
+                  <td className="px-4 py-3 font-medium text-gray-800">
+                    <Link to={`/freelancer/tasks/${task.id}`} className="text-blue-600 hover:underline">
+                      {task.title}
+                    </Link>
+                  </td>
                   <td className="px-4 py-3 text-gray-600">{task.project.name}</td>
                   <td className={`px-4 py-3 ${isOverdue(task) ? 'font-medium text-red-600' : 'text-gray-600'}`}>
                     {task.dueDate ? new Date(task.dueDate).toLocaleDateString() : '-'}

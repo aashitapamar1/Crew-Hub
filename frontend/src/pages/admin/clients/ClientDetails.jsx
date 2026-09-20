@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import * as clientService from '../../../services/clientService'
+import * as fileService from '../../../services/fileService'
 import StatusBadge from '../../../components/StatusBadge'
+import FileManager from '../../../components/FileManager'
 
 function ClientDetails() {
   const { id } = useParams()
   const navigate = useNavigate()
   const [client, setClient] = useState(null)
+  const [files, setFiles] = useState([])
   const [error, setError] = useState('')
   const [confirmingArchive, setConfirmingArchive] = useState(false)
 
@@ -15,7 +18,26 @@ function ClientDetails() {
       .getClient(id)
       .then((res) => setClient(res.client))
       .catch(() => setError('Could not load client'))
+    loadFiles()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
+
+  function loadFiles() {
+    fileService.listFiles({ clientId: id }).then((res) => setFiles(res.files))
+  }
+
+  async function handleUpload(file) {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('clientId', id)
+    await fileService.uploadFile(formData)
+    loadFiles()
+  }
+
+  async function handleDeleteFile(fileId) {
+    await fileService.deleteFile(fileId)
+    loadFiles()
+  }
 
   async function handleArchive() {
     try {
@@ -120,6 +142,16 @@ function ClientDetails() {
           <p className="mt-2 text-sm text-gray-600">{client.internalNotes}</p>
         </section>
       )}
+
+      <div className="mt-6">
+        <FileManager
+          title="Documents"
+          files={files}
+          onUpload={handleUpload}
+          onDelete={handleDeleteFile}
+          emptyText="No documents uploaded yet."
+        />
+      </div>
 
       <section className="mt-6 rounded-lg border border-gray-200 bg-white p-6">
         <h2 className="text-lg font-medium text-gray-800">Upcoming deadlines</h2>

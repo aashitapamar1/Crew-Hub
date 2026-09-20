@@ -24,10 +24,13 @@ import TaskDetails from '../pages/admin/tasks/TaskDetails'
 
 import ClientLayout from '../layouts/ClientLayout'
 import ClientDashboard from '../pages/client/Dashboard'
+import ClientFiles from '../pages/client/Files'
 
 import FreelancerLayout from '../layouts/FreelancerLayout'
 import FreelancerDashboard from '../pages/freelancer/Dashboard'
 import FreelancerTasks from '../pages/freelancer/Tasks'
+import FreelancerTaskDetails from '../pages/freelancer/TaskDetails'
+import FreelancerFiles from '../pages/freelancer/Files'
 
 const DASHBOARD_BY_ROLE = {
   ADMIN: '/dashboard',
@@ -76,6 +79,7 @@ function AppRoutes() {
       <Route element={<ProtectedRoute allowedRoles={['CLIENT']} />}>
         <Route element={<ClientLayout />}>
           <Route path="/client/dashboard" element={<ClientDashboard />} />
+          <Route path="/client/files" element={<ClientFiles />} />
           <Route path="/client/profile" element={<Profile />} />
         </Route>
       </Route>
@@ -84,6 +88,8 @@ function AppRoutes() {
         <Route element={<FreelancerLayout />}>
           <Route path="/freelancer/dashboard" element={<FreelancerDashboard />} />
           <Route path="/freelancer/tasks" element={<FreelancerTasks />} />
+          <Route path="/freelancer/tasks/:id" element={<FreelancerTaskDetails />} />
+          <Route path="/freelancer/files" element={<FreelancerFiles />} />
           <Route path="/freelancer/profile" element={<Profile />} />
         </Route>
       </Route>

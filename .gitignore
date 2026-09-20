@@ -9,6 +9,9 @@ dist/
 dist-ssr/
 build/
 
+# Local file storage (dev fallback when Cloudinary isn't configured)
+backend/uploads/
+
 # Environment variables
 .env
 .env.local

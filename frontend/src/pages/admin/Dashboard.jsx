@@ -21,6 +21,8 @@ const ACTIVITY_LABELS = {
   TASK_UPDATED: 'Task updated',
   TASK_STATUS_CHANGED: 'Task status updated',
   TASK_DELETED: 'Task deleted',
+  FILE_UPLOADED: 'New file uploaded',
+  FILE_DELETED: 'File deleted',
 }
 
 function Dashboard() {
