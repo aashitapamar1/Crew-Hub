@@ -1,0 +1,269 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------- Enums ----------
+
+enum Role {
+  ADMIN
+  CLIENT
+  FREELANCER
+}
+
+enum ClientStatus {
+  ACTIVE
+  INACTIVE
+  ARCHIVED
+}
+
+enum FreelancerStatus {
+  AVAILABLE
+  BUSY
+  INACTIVE
+  ARCHIVED
+}
+
+enum ProjectStatus {
+  PLANNED
+  IN_PROGRESS
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+enum Priority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  IN_REVIEW
+  COMPLETED
+  BLOCKED
+}
+
+// ---------- Models ----------
+
+model User {
+  id                 String              @id @default(uuid())
+  email              String              @unique
+  password           String
+  role               Role
+  isActive           Boolean             @default(true)
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  client             Client?
+  freelancer         Freelancer?
+  notifications      Notification[]
+  passwordResetTokens PasswordResetToken[]
+}
+
+model PasswordResetToken {
+  id        String   @id @default(uuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model Client {
+  id                String       @id @default(uuid())
+  userId            String       @unique
+  user              User         @relation(fields: [userId], references: [id])
+
+  fullName          String
+  phone             String?
+  profilePicture    String?
+
+  companyName       String?
+  industry          String?
+  website           String?
+  companyDescription String?
+
+  street            String?
+  city              String?
+  state             String?
+  country           String?
+  postalCode        String?
+
+  internalNotes     String?
+  status            ClientStatus @default(ACTIVE)
+
+  projects          Project[]
+  files             File[]
+
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+}
+
+model Freelancer {
+  id             String            @id @default(uuid())
+  userId         String            @unique
+  user           User              @relation(fields: [userId], references: [id])
+
+  fullName       String
+  phone          String?
+  profilePicture String?
+
+  title          String?
+  skills         String[]
+  experience     String?
+  bio            String?
+  portfolioUrl   String?
+  hourlyRate     Float?
+  availability   String?
+
+  status         FreelancerStatus  @default(AVAILABLE)
+
+  projectMembers ProjectMember[]
+  tasks          Task[]
+
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+}
+
+model Project {
+  id          String        @id @default(uuid())
+  name        String
+  description String?
+
+  clientId    String
+  client      Client        @relation(fields: [clientId], references: [id])
+
+  budget      Float?
+  startDate   DateTime?
+  deadline    DateTime?
+  priority    Priority      @default(MEDIUM)
+  status      ProjectStatus @default(PLANNED)
+  progress    Int           @default(0)
+
+  members     ProjectMember[]
+  tasks       Task[]
+  milestones  Milestone[]
+  files       File[]
+  messages    Message[]
+  feedback    Feedback[]
+
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+model ProjectMember {
+  id           String     @id @default(uuid())
+  projectId    String
+  project      Project    @relation(fields: [projectId], references: [id])
+  freelancerId String
+  freelancer   Freelancer @relation(fields: [freelancerId], references: [id])
+  role         String?
+  createdAt    DateTime   @default(now())
+
+  @@unique([projectId, freelancerId])
+}
+
+model Task {
+  id           String      @id @default(uuid())
+  title        String
+  description  String?
+
+  projectId    String
+  project      Project     @relation(fields: [projectId], references: [id])
+
+  freelancerId String?
+  freelancer   Freelancer? @relation(fields: [freelancerId], references: [id])
+
+  priority     Priority    @default(MEDIUM)
+  status       TaskStatus  @default(TODO)
+  dueDate      DateTime?
+
+  files        File[]
+
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model Milestone {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  dueDate     DateTime?
+  isCompleted Boolean   @default(false)
+
+  projectId   String
+  project     Project   @relation(fields: [projectId], references: [id])
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model File {
+  id        String   @id @default(uuid())
+  fileName  String
+  fileUrl   String
+  fileType  String?
+
+  clientId  String?
+  client    Client?  @relation(fields: [clientId], references: [id])
+
+  projectId String?
+  project   Project? @relation(fields: [projectId], references: [id])
+
+  taskId    String?
+  task      Task?    @relation(fields: [taskId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model Message {
+  id         String   @id @default(uuid())
+  content    String
+  senderId   String
+
+  projectId  String
+  project    Project  @relation(fields: [projectId], references: [id])
+
+  createdAt  DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+}
+
+model Feedback {
+  id        String   @id @default(uuid())
+  content   String
+  rating    Int?
+
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+model Activity {
+  id        String   @id @default(uuid())
+  action    String
+  entity    String
+  entityId  String?
+  actorId   String?
+
+  createdAt DateTime @default(now())
+}
