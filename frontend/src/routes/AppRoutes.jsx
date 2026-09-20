@@ -9,6 +9,9 @@ import Profile from '../pages/Profile'
 
 import AdminLayout from '../layouts/AdminLayout'
 import AdminDashboard from '../pages/admin/Dashboard'
+import ClientList from '../pages/admin/clients/ClientList'
+import ClientForm from '../pages/admin/clients/ClientForm'
+import ClientDetails from '../pages/admin/clients/ClientDetails'
 
 import ClientLayout from '../layouts/ClientLayout'
 import ClientDashboard from '../pages/client/Dashboard'
@@ -40,6 +43,10 @@ function AppRoutes() {
       <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
         <Route element={<AdminLayout />}>
           <Route path="/dashboard" element={<AdminDashboard />} />
+          <Route path="/clients" element={<ClientList />} />
+          <Route path="/clients/new" element={<ClientForm />} />
+          <Route path="/clients/:id" element={<ClientDetails />} />
+          <Route path="/clients/:id/edit" element={<ClientForm />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
       </Route>
