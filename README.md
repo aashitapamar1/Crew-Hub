@@ -17,7 +17,8 @@ AI-powered Digital Agency Management Platform. Internal tool for a digital agenc
 crew-hub/
 ├── frontend/     React + Vite + Tailwind app
 ├── backend/      Express API + Prisma schema
-└── ai-service/   FastAPI service for AI/ML features
+├── ai-service/   FastAPI service for AI/ML features
+└── e2e/          Playwright end-to-end tests (drives frontend + backend together)
 ```
 
 ## Getting Started
@@ -57,6 +58,49 @@ uvicorn app.main:app --reload --port 8000   # http://localhost:8000
 - Backend: `GET /api/health`
 - AI Service: `GET /health`
 
+## Testing
+
+### Backend integration tests (Jest + Supertest)
+
+Runs against a dedicated `crewhub_test` database — never your dev data.
+
+```bash
+# one-time setup
+createdb crewhub_test   # or: psql -c "CREATE DATABASE crewhub_test;"
+cd backend
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/crewhub_test?schema=public" npx prisma migrate deploy
+
+npm test
+```
+
+Covers auth, RBAC across all three roles, client management, the project/task
+workflow's integrity rules (team-membership enforcement, task ownership,
+progress auto-derivation), and file access isolation between clients.
+
+### End-to-end tests (Playwright)
+
+Drives the real UI against a dedicated `crewhub_e2e` database. Automatically
+starts its own backend + frontend dev servers (on ports 5050/5175, so it
+won't collide with servers you already have running) and seeds the admin
+account — Postgres just needs to be running.
+
+```bash
+createdb crewhub_e2e
+cd e2e
+npm install
+npm test
+```
+
+`tests/full-workflow.spec.js` encodes the platform's fixed workflow as a
+single regression test: Admin creates a Client and Freelancer, creates a
+Project, assigns the Freelancer, creates a Task — then the Freelancer logs in,
+sees the task, and marks it Completed — then the Admin confirms the project's
+progress reflects it. Safe to re-run repeatedly; each run uses a unique
+timestamp-based email/name suffix.
+
 ## Status
 
-Project setup complete (Step 1). Authentication module is next.
+All 16 core modules are implemented: setup, auth, admin dashboard, client
+management, freelancer management, project management, task management, file
+management, communication, notifications, reports, AI features, and this
+testing layer. Deployment is next.
