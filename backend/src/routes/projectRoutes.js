@@ -13,11 +13,14 @@ const { protect, authorize } = require('../middlewares/authMiddleware')
 
 const router = express.Router()
 
-router.use(protect, authorize('ADMIN'))
+router.use(protect)
 
-router.get('/', listProjects)
+router.get('/', authorize('ADMIN', 'CLIENT', 'FREELANCER'), listProjects)
+router.get('/:id', authorize('ADMIN', 'CLIENT', 'FREELANCER'), getProject)
+
+router.use(authorize('ADMIN'))
+
 router.post('/', createProject)
-router.get('/:id', getProject)
 router.put('/:id', updateProject)
 router.patch('/:id/status', updateProjectStatus)
 

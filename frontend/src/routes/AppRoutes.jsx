@@ -24,10 +24,14 @@ import TaskDetails from '../pages/admin/tasks/TaskDetails'
 
 import ClientLayout from '../layouts/ClientLayout'
 import ClientDashboard from '../pages/client/Dashboard'
+import ClientProjects from '../pages/client/Projects'
+import ClientProjectDetails from '../pages/client/ProjectDetails'
 import ClientFiles from '../pages/client/Files'
 
 import FreelancerLayout from '../layouts/FreelancerLayout'
 import FreelancerDashboard from '../pages/freelancer/Dashboard'
+import FreelancerProjects from '../pages/freelancer/Projects'
+import FreelancerProjectDetails from '../pages/freelancer/ProjectDetails'
 import FreelancerTasks from '../pages/freelancer/Tasks'
 import FreelancerTaskDetails from '../pages/freelancer/TaskDetails'
 import FreelancerFiles from '../pages/freelancer/Files'
@@ -79,6 +83,8 @@ function AppRoutes() {
       <Route element={<ProtectedRoute allowedRoles={['CLIENT']} />}>
         <Route element={<ClientLayout />}>
           <Route path="/client/dashboard" element={<ClientDashboard />} />
+          <Route path="/client/projects" element={<ClientProjects />} />
+          <Route path="/client/projects/:id" element={<ClientProjectDetails />} />
           <Route path="/client/files" element={<ClientFiles />} />
           <Route path="/client/profile" element={<Profile />} />
         </Route>
@@ -87,6 +93,8 @@ function AppRoutes() {
       <Route element={<ProtectedRoute allowedRoles={['FREELANCER']} />}>
         <Route element={<FreelancerLayout />}>
           <Route path="/freelancer/dashboard" element={<FreelancerDashboard />} />
+          <Route path="/freelancer/projects" element={<FreelancerProjects />} />
+          <Route path="/freelancer/projects/:id" element={<FreelancerProjectDetails />} />
           <Route path="/freelancer/tasks" element={<FreelancerTasks />} />
           <Route path="/freelancer/tasks/:id" element={<FreelancerTaskDetails />} />
           <Route path="/freelancer/files" element={<FreelancerFiles />} />

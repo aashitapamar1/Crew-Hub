@@ -6,6 +6,7 @@ import * as fileService from '../../../services/fileService'
 import StatusBadge from '../../../components/StatusBadge'
 import PriorityBadge from '../../../components/PriorityBadge'
 import FileManager from '../../../components/FileManager'
+import ProjectMessages from '../../../components/ProjectMessages'
 
 const STATUS_OPTIONS = ['PLANNED', 'IN_PROGRESS', 'ON_HOLD', 'COMPLETED', 'CANCELLED']
 
@@ -293,6 +294,10 @@ function ProjectDetails() {
           </button>
         </form>
       </section>
+
+      <div className="mt-6">
+        <ProjectMessages projectId={id} />
+      </div>
 
       <button onClick={() => navigate('/projects')} className="mt-6 text-sm text-blue-600 hover:underline">
         Back to projects

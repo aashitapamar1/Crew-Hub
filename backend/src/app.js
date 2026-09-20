@@ -9,6 +9,7 @@ const freelancerRoutes = require('./routes/freelancerRoutes')
 const projectRoutes = require('./routes/projectRoutes')
 const taskRoutes = require('./routes/taskRoutes')
 const fileRoutes = require('./routes/fileRoutes')
+const messageRoutes = require('./routes/messageRoutes')
 
 const app = express()
 
@@ -27,6 +28,7 @@ app.use('/api/freelancers', freelancerRoutes)
 app.use('/api/projects', projectRoutes)
 app.use('/api/tasks', taskRoutes)
 app.use('/api/files', fileRoutes)
+app.use('/api/messages', messageRoutes)
 
 app.use(notFound)
 app.use(errorHandler)

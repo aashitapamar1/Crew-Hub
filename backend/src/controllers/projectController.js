@@ -1,5 +1,6 @@
 const prisma = require('../config/db')
 const logActivity = require('../utils/logActivity')
+const { getOwnClientId, getOwnFreelancerId, hasProjectAccess } = require('../utils/projectAccess')
 
 const PROJECT_LIST_SELECT = {
   id: true,
@@ -20,8 +21,17 @@ async function listProjects(req, res) {
   const where = {
     ...(status && { status }),
     ...(priority && { priority }),
-    ...(clientId && { clientId }),
     ...(search && { name: { contains: search, mode: 'insensitive' } }),
+  }
+
+  if (req.user.role === 'CLIENT') {
+    const ownClientId = await getOwnClientId(req.user.id)
+    where.clientId = ownClientId || '__none__'
+  } else if (req.user.role === 'FREELANCER') {
+    const ownFreelancerId = await getOwnFreelancerId(req.user.id)
+    where.members = { some: { freelancerId: ownFreelancerId || '__none__' } }
+  } else if (clientId) {
+    where.clientId = clientId
   }
 
   const take = Math.min(Number(limit) || 20, 100)
@@ -96,6 +106,11 @@ async function getProject(req, res) {
 
   if (!project) {
     return res.status(404).json({ success: false, message: 'Project not found' })
+  }
+
+  const allowed = await hasProjectAccess(req.user, project)
+  if (!allowed) {
+    return res.status(403).json({ success: false, message: 'Forbidden: no access to this project' })
   }
 
   const totalTasks = project.tasks.length
