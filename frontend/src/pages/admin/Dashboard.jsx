@@ -8,6 +8,9 @@ const ACTIVITY_LABELS = {
   CLIENT_CREATED: 'New client added',
   CLIENT_UPDATED: 'Client updated',
   CLIENT_ARCHIVED: 'Client archived',
+  FREELANCER_CREATED: 'New freelancer added',
+  FREELANCER_UPDATED: 'Freelancer updated',
+  FREELANCER_ARCHIVED: 'Freelancer archived',
 }
 
 function Dashboard() {

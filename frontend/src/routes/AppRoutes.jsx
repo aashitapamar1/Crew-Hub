@@ -12,6 +12,9 @@ import AdminDashboard from '../pages/admin/Dashboard'
 import ClientList from '../pages/admin/clients/ClientList'
 import ClientForm from '../pages/admin/clients/ClientForm'
 import ClientDetails from '../pages/admin/clients/ClientDetails'
+import FreelancerList from '../pages/admin/freelancers/FreelancerList'
+import FreelancerForm from '../pages/admin/freelancers/FreelancerForm'
+import FreelancerDetails from '../pages/admin/freelancers/FreelancerDetails'
 
 import ClientLayout from '../layouts/ClientLayout'
 import ClientDashboard from '../pages/client/Dashboard'
@@ -47,6 +50,10 @@ function AppRoutes() {
           <Route path="/clients/new" element={<ClientForm />} />
           <Route path="/clients/:id" element={<ClientDetails />} />
           <Route path="/clients/:id/edit" element={<ClientForm />} />
+          <Route path="/freelancers" element={<FreelancerList />} />
+          <Route path="/freelancers/new" element={<FreelancerForm />} />
+          <Route path="/freelancers/:id" element={<FreelancerDetails />} />
+          <Route path="/freelancers/:id/edit" element={<FreelancerForm />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
       </Route>

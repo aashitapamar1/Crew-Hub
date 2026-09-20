@@ -4,6 +4,7 @@ const { notFound, errorHandler } = require('./middlewares/errorMiddleware')
 const authRoutes = require('./routes/authRoutes')
 const dashboardRoutes = require('./routes/dashboardRoutes')
 const clientRoutes = require('./routes/clientRoutes')
+const freelancerRoutes = require('./routes/freelancerRoutes')
 
 const app = express()
 
@@ -17,6 +18,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes)
 app.use('/api/dashboard', dashboardRoutes)
 app.use('/api/clients', clientRoutes)
+app.use('/api/freelancers', freelancerRoutes)
 
 app.use(notFound)
 app.use(errorHandler)
