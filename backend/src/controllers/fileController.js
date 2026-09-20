@@ -1,6 +1,7 @@
 const prisma = require('../config/db')
 const storeFile = require('../utils/storeFile')
 const logActivity = require('../utils/logActivity')
+const { notifyUser, notifyAdmins } = require('../utils/notify')
 
 async function getOwnClientId(userId) {
   const client = await prisma.client.findUnique({ where: { userId }, select: { id: true } })
@@ -92,13 +93,16 @@ async function uploadFile(req, res) {
     }
   }
 
+  let targetClient = null
+  let targetProject = null
+
   if (clientId) {
-    const client = await prisma.client.findUnique({ where: { id: clientId } })
-    if (!client) return res.status(404).json({ success: false, message: 'Client not found' })
+    targetClient = await prisma.client.findUnique({ where: { id: clientId } })
+    if (!targetClient) return res.status(404).json({ success: false, message: 'Client not found' })
   }
   if (projectId) {
-    const project = await prisma.project.findUnique({ where: { id: projectId } })
-    if (!project) return res.status(404).json({ success: false, message: 'Project not found' })
+    targetProject = await prisma.project.findUnique({ where: { id: projectId }, include: { client: true } })
+    if (!targetProject) return res.status(404).json({ success: false, message: 'Project not found' })
   }
   if (taskId) {
     const task = await prisma.task.findUnique({ where: { id: taskId } })
@@ -119,6 +123,13 @@ async function uploadFile(req, res) {
   })
 
   await logActivity({ action: 'FILE_UPLOADED', entity: 'File', entityId: file.id, actorId: req.user.id })
+
+  if (req.user.role === 'FREELANCER') {
+    await notifyAdmins('New file uploaded', `${req.user.name} uploaded "${file.fileName}"`, req.user.id)
+  } else if (req.user.role === 'ADMIN') {
+    const clientUserId = targetClient?.userId || targetProject?.client?.userId
+    await notifyUser(clientUserId, 'New file uploaded', `A new file "${file.fileName}" was added to your project`)
+  }
 
   res.status(201).json({ success: true, file })
 }

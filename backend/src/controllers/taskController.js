@@ -1,6 +1,7 @@
 const prisma = require('../config/db')
 const logActivity = require('../utils/logActivity')
 const recalculateProjectProgress = require('../utils/recalculateProjectProgress')
+const { notifyUser, notifyAdmins } = require('../utils/notify')
 
 const TASK_SELECT = {
   id: true,
@@ -94,6 +95,11 @@ async function createTask(req, res) {
   await recalculateProjectProgress(projectId)
   await logActivity({ action: 'TASK_CREATED', entity: 'Task', entityId: task.id, actorId: req.user.id })
 
+  if (freelancerId) {
+    const freelancer = await prisma.freelancer.findUnique({ where: { id: freelancerId }, select: { userId: true } })
+    await notifyUser(freelancer?.userId, 'New task assigned', `You have been assigned a new task: "${title}"`)
+  }
+
   res.status(201).json({ success: true, task })
 }
 
@@ -147,6 +153,11 @@ async function updateTask(req, res) {
 
   await logActivity({ action: 'TASK_UPDATED', entity: 'Task', entityId: id, actorId: req.user.id })
 
+  if (freelancerId && freelancerId !== task.freelancerId) {
+    const freelancer = await prisma.freelancer.findUnique({ where: { id: freelancerId }, select: { userId: true } })
+    await notifyUser(freelancer?.userId, 'New task assigned', `You have been assigned the task: "${updated.title}"`)
+  }
+
   res.status(200).json({ success: true, task: updated })
 }
 
@@ -179,6 +190,11 @@ async function updateTaskStatus(req, res) {
 
   await recalculateProjectProgress(task.projectId)
   await logActivity({ action: 'TASK_STATUS_CHANGED', entity: 'Task', entityId: id, actorId: req.user.id })
+
+  if (req.user.role === 'FREELANCER') {
+    const label = status === 'COMPLETED' ? 'Task completed' : 'Task status changed'
+    await notifyAdmins(label, `${req.user.name} marked "${updated.title}" as ${status.replace('_', ' ')}`, req.user.id)
+  }
 
   res.status(200).json({ success: true, task: updated })
 }

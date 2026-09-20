@@ -6,6 +6,7 @@ import Login from '../pages/auth/Login'
 import ForgotPassword from '../pages/auth/ForgotPassword'
 import ResetPassword from '../pages/auth/ResetPassword'
 import Profile from '../pages/Profile'
+import Notifications from '../pages/Notifications'
 
 import AdminLayout from '../layouts/AdminLayout'
 import AdminDashboard from '../pages/admin/Dashboard'
@@ -86,6 +87,7 @@ function AppRoutes() {
           <Route path="/client/projects" element={<ClientProjects />} />
           <Route path="/client/projects/:id" element={<ClientProjectDetails />} />
           <Route path="/client/files" element={<ClientFiles />} />
+          <Route path="/client/notifications" element={<Notifications />} />
           <Route path="/client/profile" element={<Profile />} />
         </Route>
       </Route>
@@ -98,6 +100,7 @@ function AppRoutes() {
           <Route path="/freelancer/tasks" element={<FreelancerTasks />} />
           <Route path="/freelancer/tasks/:id" element={<FreelancerTaskDetails />} />
           <Route path="/freelancer/files" element={<FreelancerFiles />} />
+          <Route path="/freelancer/notifications" element={<Notifications />} />
           <Route path="/freelancer/profile" element={<Profile />} />
         </Route>
       </Route>

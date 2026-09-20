@@ -1,6 +1,7 @@
 const prisma = require('../config/db')
 const logActivity = require('../utils/logActivity')
 const { getOwnClientId, getOwnFreelancerId, hasProjectAccess } = require('../utils/projectAccess')
+const { notifyUser, notifyUsers } = require('../utils/notify')
 
 const PROJECT_LIST_SELECT = {
   id: true,
@@ -182,6 +183,14 @@ async function updateProjectStatus(req, res) {
 
   await logActivity({ action: 'PROJECT_STATUS_CHANGED', entity: 'Project', entityId: id, actorId: req.user.id })
 
+  const client = await prisma.client.findUnique({ where: { id: project.clientId }, select: { userId: true } })
+  const members = await prisma.projectMember.findMany({
+    where: { projectId: id },
+    select: { freelancer: { select: { userId: true } } },
+  })
+  const recipientIds = [client?.userId, ...members.map((m) => m.freelancer.userId)].filter((uid) => uid !== req.user.id)
+  await notifyUsers(recipientIds, 'Project status updated', `"${project.name}" status changed to ${status.replace('_', ' ')}`)
+
   res.status(200).json({ success: true, project: updated })
 }
 
@@ -218,6 +227,7 @@ async function addMember(req, res) {
   })
 
   await logActivity({ action: 'PROJECT_MEMBER_ADDED', entity: 'Project', entityId: id, actorId: req.user.id })
+  await notifyUser(freelancer.userId, 'New project assigned', `You have been added to the project "${project.name}"`)
 
   res.status(201).json({ success: true, member })
 }
