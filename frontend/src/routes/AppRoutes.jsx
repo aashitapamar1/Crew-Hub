@@ -22,6 +22,7 @@ import ProjectDetails from '../pages/admin/projects/ProjectDetails'
 import TaskList from '../pages/admin/tasks/TaskList'
 import TaskForm from '../pages/admin/tasks/TaskForm'
 import TaskDetails from '../pages/admin/tasks/TaskDetails'
+import Reports from '../pages/admin/Reports'
 
 import ClientLayout from '../layouts/ClientLayout'
 import ClientDashboard from '../pages/client/Dashboard'
@@ -77,6 +78,7 @@ function AppRoutes() {
           <Route path="/tasks/new" element={<TaskForm />} />
           <Route path="/tasks/:id" element={<TaskDetails />} />
           <Route path="/tasks/:id/edit" element={<TaskForm />} />
+          <Route path="/reports" element={<Reports />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
       </Route>

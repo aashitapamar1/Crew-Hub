@@ -11,6 +11,7 @@ const taskRoutes = require('./routes/taskRoutes')
 const fileRoutes = require('./routes/fileRoutes')
 const messageRoutes = require('./routes/messageRoutes')
 const notificationRoutes = require('./routes/notificationRoutes')
+const reportRoutes = require('./routes/reportRoutes')
 
 const app = express()
 
@@ -31,6 +32,7 @@ app.use('/api/tasks', taskRoutes)
 app.use('/api/files', fileRoutes)
 app.use('/api/messages', messageRoutes)
 app.use('/api/notifications', notificationRoutes)
+app.use('/api/reports', reportRoutes)
 
 app.use(notFound)
 app.use(errorHandler)
