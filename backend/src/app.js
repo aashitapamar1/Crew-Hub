@@ -12,6 +12,7 @@ const fileRoutes = require('./routes/fileRoutes')
 const messageRoutes = require('./routes/messageRoutes')
 const notificationRoutes = require('./routes/notificationRoutes')
 const reportRoutes = require('./routes/reportRoutes')
+const aiRoutes = require('./routes/aiRoutes')
 
 const app = express()
 
@@ -33,6 +34,7 @@ app.use('/api/files', fileRoutes)
 app.use('/api/messages', messageRoutes)
 app.use('/api/notifications', notificationRoutes)
 app.use('/api/reports', reportRoutes)
+app.use('/api/ai', aiRoutes)
 
 app.use(notFound)
 app.use(errorHandler)
