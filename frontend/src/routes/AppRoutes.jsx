@@ -30,6 +30,7 @@ import ClientDashboard from '../pages/client/Dashboard'
 import ClientProjects from '../pages/client/Projects'
 import ClientProjectDetails from '../pages/client/ProjectDetails'
 import ClientFiles from '../pages/client/Files'
+import ClientFeedback from '../pages/client/Feedback'
 
 import FreelancerLayout from '../layouts/FreelancerLayout'
 import FreelancerDashboard from '../pages/freelancer/Dashboard'
@@ -91,6 +92,7 @@ function AppRoutes() {
           <Route path="/client/projects" element={<ClientProjects />} />
           <Route path="/client/projects/:id" element={<ClientProjectDetails />} />
           <Route path="/client/files" element={<ClientFiles />} />
+          <Route path="/client/feedback" element={<ClientFeedback />} />
           <Route path="/client/notifications" element={<Notifications />} />
           <Route path="/client/profile" element={<Profile />} />
         </Route>

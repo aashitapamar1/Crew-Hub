@@ -13,6 +13,7 @@ const messageRoutes = require('./routes/messageRoutes')
 const notificationRoutes = require('./routes/notificationRoutes')
 const reportRoutes = require('./routes/reportRoutes')
 const aiRoutes = require('./routes/aiRoutes')
+const feedbackRoutes = require('./routes/feedbackRoutes')
 
 const app = express()
 
@@ -35,6 +36,7 @@ app.use('/api/messages', messageRoutes)
 app.use('/api/notifications', notificationRoutes)
 app.use('/api/reports', reportRoutes)
 app.use('/api/ai', aiRoutes)
+app.use('/api/feedback', feedbackRoutes)
 
 app.use(notFound)
 app.use(errorHandler)

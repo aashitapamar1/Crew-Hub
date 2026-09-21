@@ -3,10 +3,12 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import * as projectService from '../../../services/projectService'
 import * as freelancerService from '../../../services/freelancerService'
 import * as fileService from '../../../services/fileService'
+import * as feedbackService from '../../../services/feedbackService'
 import StatusBadge from '../../../components/StatusBadge'
 import PriorityBadge from '../../../components/PriorityBadge'
 import FileManager from '../../../components/FileManager'
 import ProjectMessages from '../../../components/ProjectMessages'
+import StarRating from '../../../components/StarRating'
 
 const STATUS_OPTIONS = ['PLANNED', 'IN_PROGRESS', 'ON_HOLD', 'COMPLETED', 'CANCELLED']
 
@@ -16,6 +18,7 @@ function ProjectDetails() {
   const [project, setProject] = useState(null)
   const [freelancers, setFreelancers] = useState([])
   const [files, setFiles] = useState([])
+  const [feedback, setFeedback] = useState([])
   const [error, setError] = useState('')
 
   const [newMemberId, setNewMemberId] = useState('')
@@ -33,6 +36,7 @@ function ProjectDetails() {
       .then(([, freelancerRes]) => setFreelancers(freelancerRes.freelancers))
       .catch(() => setError('Could not load project'))
     loadFiles()
+    feedbackService.listFeedback(id).then((res) => setFeedback(res.feedback))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
 
@@ -293,6 +297,25 @@ function ProjectDetails() {
             Add
           </button>
         </form>
+      </section>
+
+      <section className="mt-6 rounded-lg border border-gray-200 bg-white p-6">
+        <h2 className="text-lg font-medium text-gray-800">Client feedback</h2>
+        {feedback.length === 0 ? (
+          <p className="mt-2 text-sm text-gray-500">No feedback submitted yet.</p>
+        ) : (
+          <ul className="mt-3 space-y-3">
+            {feedback.map((f) => (
+              <li key={f.id} className="rounded-md border border-gray-100 p-3">
+                <div className="flex items-center justify-between">
+                  {f.rating ? <StarRating value={f.rating} readOnly /> : <span />}
+                  <span className="text-xs text-gray-400">{new Date(f.createdAt).toLocaleString()}</span>
+                </div>
+                <p className="mt-2 text-sm text-gray-700">{f.content}</p>
+              </li>
+            ))}
+          </ul>
+        )}
       </section>
 
       <div className="mt-6">

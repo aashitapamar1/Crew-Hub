@@ -23,6 +23,7 @@ const ACTIVITY_LABELS = {
   TASK_DELETED: 'Task deleted',
   FILE_UPLOADED: 'New file uploaded',
   FILE_DELETED: 'File deleted',
+  FEEDBACK_SUBMITTED: 'Client feedback received',
 }
 
 function Dashboard() {

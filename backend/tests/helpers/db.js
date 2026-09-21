@@ -6,6 +6,7 @@ async function resetDb() {
   await prisma.activity.deleteMany()
   await prisma.notification.deleteMany()
   await prisma.message.deleteMany()
+  await prisma.feedback.deleteMany()
   await prisma.file.deleteMany()
   await prisma.milestone.deleteMany()
   await prisma.projectMember.deleteMany()
